@@ -1,5 +1,7 @@
 # Seismiq
 
+[![CI](https://github.com/ChaaruViswas/seismiq/actions/workflows/ci.yml/badge.svg)](https://github.com/ChaaruViswas/seismiq/actions/workflows/ci.yml) [![Deploy](https://github.com/ChaaruViswas/seismiq/actions/workflows/deploy.yml/badge.svg)](https://github.com/ChaaruViswas/seismiq/actions/workflows/deploy.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 **Change-aware test intelligence and CI reliability — running entirely in your browser.**
 
 Seismiq reads a project's CI history and answers the questions every engineering team argues about:
