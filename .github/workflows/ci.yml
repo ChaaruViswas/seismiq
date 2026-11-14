@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # the merge base is needed for change-aware selection
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build:cli
+
+      # Dogfooding: on pull requests, explain which test files the change can affect.
+      - name: Change-aware test selection
+        if: github.event_name == 'pull_request'
+        run: node dist-cli/seismiq.mjs select --base origin/${{ github.base_ref }} --format md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Unit tests
+        run: npm run test:ci
+      - name: Reliability report
+        if: always()
+        run: node dist-cli/seismiq.mjs report reports/ --name "Seismiq unit tests" --out "$GITHUB_STEP_SUMMARY"
+
+      - run: npm run build
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: End-to-end tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-results
+          path: test-results/
+          retention-days: 7

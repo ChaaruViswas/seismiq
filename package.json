@@ -1,0 +1,48 @@
+{
+  "name": "seismiq",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Seismiq \u2014 change-aware test intelligence & CI reliability platform. Runs entirely in the browser and in CI, with zero backend.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "seismiq": "dist-cli/seismiq.mjs"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "build:cli": "node scripts/build-cli.mjs",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "test": "vitest run",
+    "test:ci": "vitest run --reporter=default --reporter=junit --outputFile.junit=reports/junit.xml",
+    "test:e2e": "playwright test",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run build && npm run build:cli",
+    "benchmark": "esbuild scripts/benchmark.ts --bundle --platform=node --format=esm --log-level=warning --outfile=dist-cli/benchmark.mjs && node dist-cli/benchmark.mjs"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^5.12.1",
+    "idb-keyval": "^6.3.0",
+    "lucide-react": "^1.72.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^8.5.1",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.7",
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "esbuild": "^0.28.2",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  }
+}
